@@ -1,8 +1,11 @@
 { inputs, ... }:
 let
   module = {
-    perSystem = { pkgs, ... }: with pkgs; {
-      shells.default.packages = [ swift swiftpm swiftpm2nix sourcekit-lsp ];
+    perSystem = { pkgs, ... }: with pkgs; let
+      packages = [ swift swiftpm swiftpm2nix sourcekit-lsp ];
+    in {
+      shells.default = { inherit packages; };
+      shells.swift = { inherit packages; };
     };
   };
 
@@ -14,6 +17,6 @@ let
   };
 in
 {
-  imports = with inputs.parts; [ components.nixology.parts.components ];
+  imports = [ module ];
   flake.components.nixology.environments.swift = component;
 }

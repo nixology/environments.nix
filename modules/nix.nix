@@ -1,8 +1,11 @@
 { inputs, ... }:
 let
   module = {
-    perSystem = { pkgs, ... }: with pkgs; {
-      shells.default.packages = [ nil nix-output-monitor ];
+    perSystem = { pkgs, ... }: with pkgs; let
+      packages = [ nix-output-monitor ];
+    in {
+      shells.default = { inherit packages; };
+      shells.nix = { inherit packages; };
     };
   };
 
@@ -14,6 +17,6 @@ let
   };
 in
 {
-  imports = with inputs.parts; [ components.nixology.parts.components ];
+  imports = [ module ];
   flake.components.nixology.environments.nix = component;
 }

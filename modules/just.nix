@@ -24,9 +24,12 @@ let
             echo "No justfile found in $src"
           fi
         '';
+
+        packages = [ pkgs.just just-aliases ];
       in
       {
-        shells.default.packages = [ pkgs.just just-aliases ];
+        shells.default = { inherit packages; };
+        shells.just = { inherit packages; };
       };
   };
 
@@ -38,6 +41,6 @@ let
   };
 in
 {
-  imports = with inputs.parts; [ components.nixology.parts.components ];
+  imports = [ module ];
   flake.components.nixology.environments.just = component;
 }

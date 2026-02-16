@@ -1,8 +1,11 @@
 { inputs, ... }:
 let
   module = {
-    perSystem = { pkgs, ... }: with pkgs; {
-      shells.default.packages = [ nodePackages.bash-language-server shellcheck ];
+    perSystem = { pkgs, ... }: with pkgs; let
+      packages = [ nodePackages.bash-language-server shellcheck ];
+    in {
+      shells.default = { inherit packages; };
+      shells.bash = { inherit packages; };
     };
   };
 
@@ -14,6 +17,6 @@ let
   };
 in
 {
-  imports = with inputs.parts; [ components.nixology.parts.components ];
+  imports = [ module ];
   flake.components.nixology.environments.bash = component;
 }
