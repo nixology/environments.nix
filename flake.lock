@@ -5,11 +5,11 @@
         "std": "std"
       },
       "locked": {
-        "lastModified": 1773847964,
-        "narHash": "sha256-s1IpN26vx8A0y35FGNJMv8cgfTf8nJFzL0wKz06S24I=",
+        "lastModified": 1774233178,
+        "narHash": "sha256-EGs1FNB38q9Ur3obE9nnGgmHPXOOJkaSGlVemSbiRlE=",
         "ref": "refs/heads/main",
-        "rev": "92704f9c9ba67d9b0a403da4dbd747589e89ed67",
-        "revCount": 82,
+        "rev": "713ddb9db042aca54ff252fa5e44f25062e1d2e4",
+        "revCount": 84,
         "type": "git",
         "url": "ssh://git@github.com/marksisson/flake"
       },
@@ -61,11 +61,11 @@
         "flake-parts": "flake-parts"
       },
       "locked": {
-        "lastModified": 1773846264,
-        "narHash": "sha256-aph61ui35tROi29P+ucfkCIkeiJ1f0WbKP89/YYMpEM=",
+        "lastModified": 1774222653,
+        "narHash": "sha256-DRSD+d6GR+QuJuocA3boL6AIKfdMInbAPbrupys2HP0=",
         "ref": "refs/heads/main",
-        "rev": "5ec05facbcd2f4681680204c158ab27c7d3873a0",
-        "revCount": 38,
+        "rev": "1e9d432a07f458411d9446f4dfd0761f478dd73f",
+        "revCount": 40,
         "type": "git",
         "url": "ssh://git@github.com/marksisson/std"
       },

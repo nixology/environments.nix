@@ -1,11 +1,11 @@
-bash:
+bash-env:
   nix develop .#bash -c $SHELL
 
-go:
+go-env:
   nix develop .#go -c $SHELL
 
-lua:
+lua-env:
   nix develop .#lua -c $SHELL
 
-swift:
+swift-env:
   nix develop .#swift -c $SHELL
