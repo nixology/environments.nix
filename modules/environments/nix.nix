@@ -4,19 +4,19 @@ let
     perSystem =
       { pkgs, ... }:
       let
-        env = {
+        shell = {
           packages = with pkgs; [ nix-output-monitor ];
         };
       in
       {
-        environments.nix = env;
+        shells.nix = shell;
       };
   };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.environments
+      nixology.extra.shells
     ];
   };
 in

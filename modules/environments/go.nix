@@ -9,7 +9,7 @@ let
         ...
       }:
       let
-        env = {
+        shell = {
           packages =
             with pkgs;
             [
@@ -21,7 +21,7 @@ let
         };
       in
       {
-        environments.go = env;
+        shells.go = shell;
         treefmt.programs.goimports.enable = lib.mkDefault true;
       };
   };
@@ -29,7 +29,7 @@ let
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.environments
+      nixology.extra.shells
       nixology.tools.treefmt
     ];
   };

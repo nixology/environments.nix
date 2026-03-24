@@ -4,19 +4,19 @@ let
     perSystem =
       { pkgs, ... }:
       let
-        env = {
+        shell = {
           packages = with pkgs; [ lua5_1 ];
         };
       in
       {
-        environments.lua = env;
+        shells.lua = shell;
       };
   };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.environments
+      nixology.extra.shells
     ];
   };
 in

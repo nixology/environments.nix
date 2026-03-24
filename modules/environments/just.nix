@@ -35,7 +35,7 @@ let
                 fi
               '';
 
-          env = {
+          shell = {
             packages = [
               pkgs.just
               just-aliases
@@ -43,14 +43,14 @@ let
           };
         in
         {
-          environments.just = env;
+          shells.just = shell;
         };
     };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.environments
+      nixology.extra.shells
     ];
   };
 in

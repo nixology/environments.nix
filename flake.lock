@@ -5,11 +5,11 @@
         "std": "std"
       },
       "locked": {
-        "lastModified": 1774233178,
-        "narHash": "sha256-EGs1FNB38q9Ur3obE9nnGgmHPXOOJkaSGlVemSbiRlE=",
+        "lastModified": 1774359754,
+        "narHash": "sha256-oJIPsSPFrGzl2SUBzSPHBIGyUvC9zKCGOrMrW7N1Bjg=",
         "ref": "refs/heads/main",
-        "rev": "713ddb9db042aca54ff252fa5e44f25062e1d2e4",
-        "revCount": 84,
+        "rev": "68f8cb7075d4b13b29477e7fe86f60ae23840f77",
+        "revCount": 85,
         "type": "git",
         "url": "ssh://git@github.com/marksisson/flake"
       },

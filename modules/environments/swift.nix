@@ -4,7 +4,7 @@ let
     perSystem =
       { pkgs, ... }:
       let
-        env = {
+        shell = {
           packages = with pkgs; [
             swift
             swiftpm
@@ -17,14 +17,14 @@ let
         };
       in
       {
-        environments.swift = env;
+        shells.swift = shell;
       };
   };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.environments
+      nixology.extra.shells
     ];
   };
 in

@@ -4,7 +4,7 @@ let
     perSystem =
       { pkgs, ... }:
       let
-        env = {
+        shell = {
           packages = with pkgs; [
             nodePackages.bash-language-server
             shellcheck
@@ -12,14 +12,14 @@ let
         };
       in
       {
-        environments.bash = env;
+        shells.bash = shell;
       };
   };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.environments
+      nixology.extra.shells
     ];
   };
 in
