@@ -9,7 +9,7 @@ let
           flakeRoot = builtins.path { path = self; };
 
           recipe = pkgs.writeShellScriptBin "recipe" ''
-            ${lib.getExe pkgs.just} --working-directory . --justfile ${flakeRoot}/justfile $(basename $0) "$@"
+            exec ${lib.getExe pkgs.just} --working-directory . --justfile ${flakeRoot}/justfile $(basename $0) "$@"
           '';
 
           just-aliases =
@@ -35,22 +35,25 @@ let
                 fi
               '';
 
-          shell = {
+        in
+        {
+          shellEnvs.just = {
             packages = [
               pkgs.just
               just-aliases
             ];
           };
-        in
-        {
-          shells.just = shell;
+          treefmt.programs = {
+            just.enable = lib.mkDefault true;
+          };
         };
     };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.shells
+      nixology.extra.shellEnvs
+      nixology.tools.treefmt
     ];
   };
 in

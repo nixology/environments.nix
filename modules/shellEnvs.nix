@@ -2,10 +2,9 @@
   perSystem =
     { config, lib, ... }:
     {
-      shells.default =
-        with config.shells;
+      shellEnvs.default =
+        with config.shellEnvs;
         lib.mkMerge [
-          bash
           just
           nix
         ];

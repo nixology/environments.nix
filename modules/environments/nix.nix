@@ -1,28 +1,9 @@
 { inputs, ... }:
-let
-  module = {
-    perSystem =
-      { pkgs, ... }:
-      let
-        shell = {
-          packages = with pkgs; [ nix-output-monitor ];
-        };
-      in
-      {
-        shells.nix = shell;
-      };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shells
-    ];
-  };
-in
 {
-  imports = [ module ];
+  # re-export nix environment component from flake components
   flake.components = {
-    nixology.environments.nix = component;
+    nixology.environments = with inputs.flake.components; {
+      inherit (nixology.environments) nix;
+    };
   };
 }

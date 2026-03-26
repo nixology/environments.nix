@@ -3,8 +3,8 @@ let
   module = {
     perSystem =
       { pkgs, ... }:
-      let
-        shell = {
+      {
+        shellEnvs.swift = {
           packages = with pkgs; [
             swift
             swiftpm
@@ -15,16 +15,16 @@ let
             stdenv = pkgs.stdenv;
           };
         };
-      in
-      {
-        shells.swift = shell;
+        treefmt.programs = {
+          swift-format.enable = true;
+        };
       };
   };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.shells
+      nixology.extra.shellEnvs
     ];
   };
 in

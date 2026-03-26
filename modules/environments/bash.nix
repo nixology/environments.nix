@@ -2,24 +2,25 @@
 let
   module = {
     perSystem =
-      { pkgs, ... }:
-      let
-        shell = {
+      { lib, pkgs, ... }:
+      {
+        shellEnvs.bash = {
           packages = with pkgs; [
             nodePackages.bash-language-server
             shellcheck
           ];
         };
-      in
-      {
-        shells.bash = shell;
+        treefmt.programs = {
+          shfmt.enable = lib.mkDefault true;
+        };
       };
   };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.shells
+      nixology.extra.shellEnvs
+      nixology.tools.treefmt
     ];
   };
 in

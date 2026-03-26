@@ -2,21 +2,22 @@
 let
   module = {
     perSystem =
-      { pkgs, ... }:
-      let
-        shell = {
+      { lib, pkgs, ... }:
+      {
+        shellEnvs.lua = {
           packages = with pkgs; [ lua5_1 ];
         };
-      in
-      {
-        shells.lua = shell;
+        treefmt.programs = {
+          stylua.enable = lib.mkDefault true;
+        };
       };
   };
 
   component = {
     inherit module;
     dependencies = with inputs.flake.components; [
-      nixology.extra.shells
+      nixology.extra.shellEnvs
+      nixology.tools.treefmt
     ];
   };
 in
