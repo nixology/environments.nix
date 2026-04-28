@@ -7,6 +7,5 @@
       nixology.environments.nix
       nixology.extra.shellEnvs
       nixology.tools.treefmt
-      nixology.pkgs.unstable
     ];
 }
