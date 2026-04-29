@@ -28,6 +28,9 @@ jobs:
 
       - name: Enable Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@b4a9864e3a8ab8179be30f2e70fd71fe9996bb9d # main
+        with:
+          diagnostic-endpoint: ""
+          use-flakehub: false
 
       - name: Run nix flake check
         run: nix flake check
