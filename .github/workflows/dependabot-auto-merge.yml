@@ -4,15 +4,20 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions: {}
 
 jobs:
   dependabot:
+    name: Enable Dependabot auto-merge
     runs-on: ubuntu-latest
 
     permissions:
-      pull-requests: write
-      contents: write
+      pull-requests: write # needed to enable auto-merge on matching Dependabot pull requests
+      contents: write # needed by GitHub CLI to set auto-merge for the pull request
 
     if: github.event.pull_request.user.login == 'dependabot[bot]'
     steps:

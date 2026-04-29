@@ -6,6 +6,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions: {}
 
 jobs:
@@ -25,6 +29,13 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/determinate-nix-action@92ffb5400c3776307a27a1727d7e2ac3dcd9f844 # v3
+        with:
+          diagnostic-endpoint: ""
+          extra-conf: |
+            extra-experimental-features = ca-derivations provenance wasm-builtin
+            extra-substituters = https://nix-community.cachix.org https://devenv.cachix.org https://helix.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw= helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs=
+            sandbox = relaxed
 
       - name: Enable Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@b4a9864e3a8ab8179be30f2e70fd71fe9996bb9d # main
@@ -33,4 +44,27 @@ jobs:
           use-flakehub: false
 
       - name: Run nix flake check
-        run: nix flake check
+        run: nix flake check -L
+
+      - name: Fix hash mismatches
+        if: failure() && github.event_name == 'pull_request'
+        id: fix-hashes
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |-
+          git stash --include-untracked
+          git fetch --depth=1 origin "$GITHUB_HEAD_REF"
+          git checkout -B "$GITHUB_HEAD_REF" "$PR_HEAD_SHA"
+
+          determinate-nixd fix hashes --auto-apply
+
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add --update --ignore-removal .
+            git commit -m "[dependabot skip] Automatically fix Nix hashes"
+            git push origin "$GITHUB_HEAD_REF"
+          fi
+
+          git checkout -
+          git stash pop || true
