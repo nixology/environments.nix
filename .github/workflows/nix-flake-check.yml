@@ -19,7 +19,7 @@ jobs:
 
     permissions:
       contents: read
-      id-token: write # needed for Magic Nix Cache
+      id-token: write # needed for determinate nix installer (flakehub OIDC token)
 
     steps:
       - name: Checkout repository

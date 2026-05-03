@@ -5,16 +5,16 @@
         "flake-parts": "flake-parts"
       },
       "locked": {
-        "lastModified": 1777298952,
-        "narHash": "sha256-b6fDcXhdMyHyQFCxoI4O5I+vQoAeaHwKffaTP8msepU=",
+        "lastModified": 1777814889,
+        "narHash": "sha256-U64t9T1YK4RQdwcQsdtFfy+0X4wQcKmAtMWgpsIP6ZA=",
         "owner": "nixology",
-        "repo": "core",
-        "rev": "772b3ca58fe4d72a0967b519c452390c76a48bba",
+        "repo": "core.nix",
+        "rev": "756737f18aca2b9b1fb217cb625c1a5a336f2dcf",
         "type": "github"
       },
       "original": {
         "owner": "nixology",
-        "repo": "core",
+        "repo": "core.nix",
         "type": "github"
       }
     },
@@ -23,16 +23,16 @@
         "core": "core"
       },
       "locked": {
-        "lastModified": 1777410866,
-        "narHash": "sha256-B4RP+FBca11AqOSitLNZ4/qYvamdt8OfZ+m1KT5E87Q=",
+        "lastModified": 1777823545,
+        "narHash": "sha256-xsck9PDsrmnitL+Wgi9KDL2kGzUuVGuRxAZt4X8lfSY=",
         "owner": "nixology",
-        "repo": "flake",
-        "rev": "907b26fb7c041e0b516dfa220265a02af96f326a",
+        "repo": "flake.nix",
+        "rev": "85221ef9d5a77942354fa5b217bed6ddbefa32ae",
         "type": "github"
       },
       "original": {
         "owner": "nixology",
-        "repo": "flake",
+        "repo": "flake.nix",
         "type": "github"
       }
     },
