@@ -7,6 +7,7 @@ let
         shellEnvs.rust = {
           packages = with pkgs; [
             cargo
+            cargo-audit
             clippy
             rust-analyzer
             rustc
