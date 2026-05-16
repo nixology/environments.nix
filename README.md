@@ -107,8 +107,8 @@ This flake is intended to be imported by other flakes that use
 
 ```nix
 {
-  inputs.flake.url = "github:nixology/flake";
-  inputs.environments.url = "github:nixology/environments";
+  inputs.flake.url = "github:nixology/flake.nix";
+  inputs.environments.url = "github:nixology/environments.nix";
 
   outputs =
     inputs:
