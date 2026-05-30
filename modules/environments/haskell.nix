@@ -1,29 +1,34 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.haskell = {
-          packages = with pkgs; [
-            cabal-install
-            ghc
-            haskell-language-server
-          ];
-        };
+        shellEnvs.haskell.packages = [
+          pkgs.cabal-install
+          pkgs.ghc
+          pkgs.haskell-language-server
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.haskell = component;
+    nixology.environments.haskell = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide Haskell development tooling through a named shell environment.";
+        shortDescription = "Haskell development environment";
+      };
+    };
   };
 }

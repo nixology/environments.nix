@@ -1,29 +1,34 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.php = {
-          packages = with pkgs; [
-            php
-            phpPackages.composer
-            phpactor
-          ];
-        };
+        shellEnvs.php.packages = [
+          pkgs.php
+          pkgs.phpPackages.composer
+          pkgs.phpactor
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.php = component;
+    nixology.environments.php = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide PHP development tooling through a named shell environment.";
+        shortDescription = "PHP development environment";
+      };
+    };
   };
 }

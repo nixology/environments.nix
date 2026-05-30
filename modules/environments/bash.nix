@@ -1,32 +1,36 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { lib, pkgs, ... }:
       {
-        shellEnvs.bash = {
-          packages = with pkgs; [
-            nodePackages.bash-language-server
-            shellcheck
-          ];
-        };
-        treefmt.programs = {
-          shfmt.enable = lib.mkDefault true;
-        };
-      };
-  };
+        shellEnvs.bash.packages = [
+          pkgs.nodePackages.bash-language-server
+          pkgs.shellcheck
+        ];
 
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-      nixology.tools.treefmt
-    ];
+        treefmt.programs.shfmt.enable = lib.mkDefault true;
+      };
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.bash = component;
+    nixology.environments.bash = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+        nixology.tools.treefmt
+      ];
+
+      meta = {
+        description = "Provide Bash development tooling and shfmt formatting.";
+        shortDescription = "Bash development environment";
+      };
+    };
   };
 }

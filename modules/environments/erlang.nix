@@ -1,28 +1,33 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.erlang = {
-          packages = with pkgs; [
-            erlang
-            rebar3
-          ];
-        };
+        shellEnvs.erlang.packages = [
+          pkgs.erlang
+          pkgs.rebar3
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.erlang = component;
+    nixology.environments.erlang = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide Erlang development tooling through a named shell environment.";
+        shortDescription = "Erlang development environment";
+      };
+    };
   };
 }

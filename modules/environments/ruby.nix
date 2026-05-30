@@ -1,32 +1,36 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { lib, pkgs, ... }:
       {
-        shellEnvs.ruby = {
-          packages = with pkgs; [
-            ruby
-            rubyPackages.rubocop
-          ];
-        };
-        treefmt.programs = {
-          rubocop.enable = lib.mkDefault true;
-        };
-      };
-  };
+        shellEnvs.ruby.packages = [
+          pkgs.ruby
+          pkgs.rubyPackages.rubocop
+        ];
 
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-      nixology.tools.treefmt
-    ];
+        treefmt.programs.rubocop.enable = lib.mkDefault true;
+      };
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.ruby = component;
+    nixology.environments.ruby = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+        nixology.tools.treefmt
+      ];
+
+      meta = {
+        description = "Provide Ruby development tooling and RuboCop formatting.";
+        shortDescription = "Ruby development environment";
+      };
+    };
   };
 }

@@ -1,29 +1,35 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { lib, pkgs, ... }:
       {
-        shellEnvs.lua = {
-          packages = with pkgs; [ lua5_1 ];
-        };
-        treefmt.programs = {
-          stylua.enable = lib.mkDefault true;
-        };
-      };
-  };
+        shellEnvs.lua.packages = [
+          pkgs.lua5_1
+        ];
 
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-      nixology.tools.treefmt
-    ];
+        treefmt.programs.stylua.enable = lib.mkDefault true;
+      };
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.lua = component;
+    nixology.environments.lua = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+        nixology.tools.treefmt
+      ];
+
+      meta = {
+        description = "Provide Lua development tooling and StyLua formatting.";
+        shortDescription = "Lua development environment";
+      };
+    };
   };
 }

@@ -1,28 +1,33 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.zig = {
-          packages = with pkgs; [
-            zig
-            zls
-          ];
-        };
+        shellEnvs.zig.packages = [
+          pkgs.zig
+          pkgs.zls
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.zig = component;
+    nixology.environments.zig = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide Zig development tooling through a named shell environment.";
+        shortDescription = "Zig development environment";
+      };
+    };
   };
 }

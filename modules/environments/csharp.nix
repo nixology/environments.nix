@@ -1,27 +1,32 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.csharp = {
-          packages = with pkgs; [
-            dotnet-sdk
-          ];
-        };
+        shellEnvs.csharp.packages = [
+          pkgs.dotnet-sdk
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.csharp = component;
+    nixology.environments.csharp = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide C#/.NET development tooling through a named shell environment.";
+        shortDescription = "C# development environment";
+      };
+    };
   };
 }

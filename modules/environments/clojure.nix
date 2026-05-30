@@ -1,29 +1,34 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.clojure = {
-          packages = with pkgs; [
-            clj-kondo
-            clojure
-            leiningen
-          ];
-        };
+        shellEnvs.clojure.packages = [
+          pkgs.clj-kondo
+          pkgs.clojure
+          pkgs.leiningen
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.clojure = component;
+    nixology.environments.clojure = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide Clojure development tooling through a named shell environment.";
+        shortDescription = "Clojure development environment";
+      };
+    };
   };
 }

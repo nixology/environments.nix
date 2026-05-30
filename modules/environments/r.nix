@@ -1,28 +1,33 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.r = {
-          packages = with pkgs; [
-            R
-            rPackages.languageserver
-          ];
-        };
+        shellEnvs.r.packages = [
+          pkgs.R
+          pkgs.rPackages.languageserver
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.r = component;
+    nixology.environments.r = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide R development tooling through a named shell environment.";
+        shortDescription = "R development environment";
+      };
+    };
   };
 }

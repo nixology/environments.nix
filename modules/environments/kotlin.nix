@@ -1,29 +1,34 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.kotlin = {
-          packages = with pkgs; [
-            gradle
-            kotlin
-            kotlin-language-server
-          ];
-        };
+        shellEnvs.kotlin.packages = [
+          pkgs.gradle
+          pkgs.kotlin
+          pkgs.kotlin-language-server
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.kotlin = component;
+    nixology.environments.kotlin = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide Kotlin development tooling through a named shell environment.";
+        shortDescription = "Kotlin development environment";
+      };
+    };
   };
 }

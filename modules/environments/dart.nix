@@ -1,27 +1,32 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.dart = {
-          packages = with pkgs; [
-            dart
-          ];
-        };
+        shellEnvs.dart.packages = [
+          pkgs.dart
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.dart = component;
+    nixology.environments.dart = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide Dart development tooling through a named shell environment.";
+        shortDescription = "Dart development environment";
+      };
+    };
   };
 }

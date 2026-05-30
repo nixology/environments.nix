@@ -1,28 +1,33 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.elixir = {
-          packages = with pkgs; [
-            elixir
-            elixir-ls
-          ];
-        };
+        shellEnvs.elixir.packages = [
+          pkgs.elixir
+          pkgs.elixir-ls
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.elixir = component;
+    nixology.environments.elixir = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide Elixir development tooling through a named shell environment.";
+        shortDescription = "Elixir development environment";
+      };
+    };
   };
 }

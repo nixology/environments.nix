@@ -1,36 +1,42 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
-      { pkgs, ... }:
+      { lib, pkgs, ... }:
       {
         shellEnvs.swift = {
-          packages = with pkgs; [
-            swift
-            swiftpm
-            swiftpm2nix
-            sourcekit-lsp
+          packages = [
+            pkgs.swift
+            pkgs.swiftpm
+            pkgs.swiftpm2nix
+            pkgs.sourcekit-lsp
           ];
-          mkShellOverrides = {
-            stdenv = pkgs.stdenv;
-          };
-        };
-        treefmt.programs = {
-          swift-format.enable = true;
-        };
-      };
-  };
 
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
+          mkShellOverrides.stdenv = pkgs.stdenv;
+        };
+
+        treefmt.programs.swift-format.enable = lib.mkDefault true;
+      };
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.swift = component;
+    nixology.environments.swift = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+        nixology.tools.treefmt
+      ];
+
+      meta = {
+        description = "Provide Swift development tooling and swift-format formatting.";
+        shortDescription = "Swift development environment";
+      };
+    };
   };
 }

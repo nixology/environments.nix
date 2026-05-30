@@ -1,36 +1,40 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { lib, pkgs, ... }:
       {
-        shellEnvs.rust = {
-          packages = with pkgs; [
-            cargo
-            cargo-audit
-            clippy
-            rust-analyzer
-            rustc
-            rustfmt
-          ];
-        };
-        treefmt.programs = {
-          rustfmt.enable = lib.mkDefault true;
-        };
-      };
-  };
+        shellEnvs.rust.packages = [
+          pkgs.cargo
+          pkgs.cargo-audit
+          pkgs.clippy
+          pkgs.rust-analyzer
+          pkgs.rustc
+          pkgs.rustfmt
+        ];
 
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-      nixology.tools.treefmt
-    ];
+        treefmt.programs.rustfmt.enable = lib.mkDefault true;
+      };
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.rust = component;
+    nixology.environments.rust = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+        nixology.tools.treefmt
+      ];
+
+      meta = {
+        description = "Provide Rust development tooling and rustfmt formatting.";
+        shortDescription = "Rust development environment";
+      };
+    };
   };
 }

@@ -1,32 +1,37 @@
 { inputs, ... }:
 let
-  module = {
+  implementation = {
     perSystem =
       { pkgs, ... }:
       {
-        shellEnvs.c = {
-          packages = with pkgs; [
-            clang-tools
-            cmake
-            gcc
-            gdb
-            gnumake
-            pkg-config
-          ];
-        };
+        shellEnvs.c.packages = [
+          pkgs.clang-tools
+          pkgs.cmake
+          pkgs.gcc
+          pkgs.gdb
+          pkgs.gnumake
+          pkgs.pkg-config
+        ];
       };
-  };
-
-  component = {
-    inherit module;
-    dependencies = with inputs.flake.components; [
-      nixology.extra.shellEnvs
-    ];
   };
 in
 {
-  imports = [ module ];
+  imports = [
+    implementation
+  ];
+
   flake.components = {
-    nixology.environments.c = component;
+    nixology.environments.c = {
+      inherit implementation;
+
+      dependencies = with inputs.flake.components; [
+        nixology.extra.shellEnvs
+      ];
+
+      meta = {
+        description = "Provide C development tooling through a named shell environment.";
+        shortDescription = "C development environment";
+      };
+    };
   };
 }
