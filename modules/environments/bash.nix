@@ -1,15 +1,14 @@
-{ inputs, ... }:
+local@{ ... }:
 let
   implementation = {
-    perSystem =
-      { lib, pkgs, ... }:
+    perSystem = { pkgs, ... }: with local.lib;
       {
         shellEnvs.bash.packages = [
           pkgs.nodePackages.bash-language-server
           pkgs.shellcheck
         ];
 
-        treefmt.programs.shfmt.enable = lib.mkDefault true;
+        treefmt.programs.shfmt.enable = mkDefault true;
       };
   };
 in
@@ -22,7 +21,7 @@ in
     nixology.environments.bash = {
       inherit implementation;
 
-      dependencies = with inputs.flake.components; [
+      dependencies = with local.inputs.flake.components; [
         nixology.extra.shellEnvs
         nixology.tools.treefmt
       ];

@@ -1,8 +1,7 @@
-{ inputs, ... }:
+local@{ ... }:
 let
   implementation = {
-    perSystem =
-      { lib, pkgs, ... }:
+    perSystem = { pkgs, ... }: with local.lib;
       {
         shellEnvs.swift = {
           packages = [
@@ -15,7 +14,7 @@ let
           mkShellOverrides.stdenv = pkgs.stdenv;
         };
 
-        treefmt.programs.swift-format.enable = lib.mkDefault true;
+        treefmt.programs.swift-format.enable = mkDefault true;
       };
   };
 in
@@ -28,7 +27,7 @@ in
     nixology.environments.swift = {
       inherit implementation;
 
-      dependencies = with inputs.flake.components; [
+      dependencies = with local.inputs.flake.components; [
         nixology.extra.shellEnvs
         nixology.tools.treefmt
       ];

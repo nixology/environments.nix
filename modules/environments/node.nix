@@ -1,8 +1,7 @@
-{ inputs, ... }:
+local@{ ... }:
 let
   implementation = {
-    perSystem =
-      { lib, pkgs, ... }:
+    perSystem = { pkgs, ... }: with local.lib;
       {
         shellEnvs.node.packages = [
           pkgs.corepack
@@ -12,7 +11,7 @@ let
           pkgs.nodejs
         ];
 
-        treefmt.programs.prettier.enable = lib.mkDefault true;
+        treefmt.programs.prettier.enable = mkDefault true;
       };
   };
 in
@@ -25,7 +24,7 @@ in
     nixology.environments.node = {
       inherit implementation;
 
-      dependencies = with inputs.flake.components; [
+      dependencies = with local.inputs.flake.components; [
         nixology.extra.shellEnvs
         nixology.tools.treefmt
       ];

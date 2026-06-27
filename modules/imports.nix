@@ -1,7 +1,7 @@
-{ inputs, ... }:
+local@{ ... }:
 {
   imports =
-    with inputs.flake.components;
+    with local.inputs.flake.components;
     map (component: component.module) [
       nixology.core.components
       nixology.environments.nix

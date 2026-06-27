@@ -1,8 +1,7 @@
-{ inputs, ... }:
+local@{ ... }:
 let
   implementation = {
-    perSystem =
-      { lib, pkgs, ... }:
+    perSystem = { pkgs, ... }: with local.lib;
       {
         shellEnvs.go.packages = [
           pkgs.go
@@ -10,7 +9,7 @@ let
           pkgs.golangci-lint
         ];
 
-        treefmt.programs.goimports.enable = lib.mkDefault true;
+        treefmt.programs.goimports.enable = mkDefault true;
       };
   };
 in
@@ -23,7 +22,7 @@ in
     nixology.environments.go = {
       inherit implementation;
 
-      dependencies = with inputs.flake.components; [
+      dependencies = with local.inputs.flake.components; [
         nixology.extra.shellEnvs
         nixology.tools.treefmt
       ];

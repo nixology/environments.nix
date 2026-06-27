@@ -1,4 +1,4 @@
-{ inputs, ... }:
+local@{ ... }:
 let
   implementation = {
     perSystem =
@@ -19,7 +19,7 @@ in
     nixology.environments.dart = {
       inherit implementation;
 
-      dependencies = with inputs.flake.components; [
+      dependencies = with local.inputs.flake.components; [
         nixology.extra.shellEnvs
       ];
 

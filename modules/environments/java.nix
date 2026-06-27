@@ -1,8 +1,7 @@
-{ inputs, ... }:
+local@{ ... }:
 let
   implementation = {
-    perSystem =
-      { lib, pkgs, ... }:
+    perSystem = { pkgs, ... }: with local.lib;
       {
         shellEnvs.java.packages = [
           pkgs.gradle
@@ -10,7 +9,7 @@ let
           pkgs.maven
         ];
 
-        treefmt.programs.google-java-format.enable = lib.mkDefault true;
+        treefmt.programs.google-java-format.enable = mkDefault true;
       };
   };
 in
@@ -23,7 +22,7 @@ in
     nixology.environments.java = {
       inherit implementation;
 
-      dependencies = with inputs.flake.components; [
+      dependencies = with local.inputs.flake.components; [
         nixology.extra.shellEnvs
         nixology.tools.treefmt
       ];

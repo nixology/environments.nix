@@ -1,8 +1,7 @@
-{ inputs, ... }:
+local@{ ... }:
 let
   implementation = {
-    perSystem =
-      { lib, pkgs, ... }:
+    perSystem = { pkgs, ... }: with local.lib;
       {
         shellEnvs.rust.packages = [
           pkgs.cargo
@@ -13,7 +12,7 @@ let
           pkgs.rustfmt
         ];
 
-        treefmt.programs.rustfmt.enable = lib.mkDefault true;
+        treefmt.programs.rustfmt.enable = mkDefault true;
       };
   };
 in
@@ -26,7 +25,7 @@ in
     nixology.environments.rust = {
       inherit implementation;
 
-      dependencies = with inputs.flake.components; [
+      dependencies = with local.inputs.flake.components; [
         nixology.extra.shellEnvs
         nixology.tools.treefmt
       ];

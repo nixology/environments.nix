@@ -1,8 +1,7 @@
-{ inputs, ... }:
+local@{ ... }:
 let
   implementation = {
-    perSystem =
-      { lib, pkgs, ... }:
+    perSystem = { pkgs, ... }: with local.lib;
       {
         shellEnvs.python.packages = [
           pkgs.black
@@ -12,8 +11,8 @@ let
         ];
 
         treefmt.programs = {
-          black.enable = lib.mkDefault true;
-          ruff-format.enable = lib.mkDefault true;
+          black.enable = mkDefault true;
+          ruff-format.enable = mkDefault true;
         };
       };
   };
@@ -27,7 +26,7 @@ in
     nixology.environments.python = {
       inherit implementation;
 
-      dependencies = with inputs.flake.components; [
+      dependencies = with local.inputs.flake.components; [
         nixology.extra.shellEnvs
         nixology.tools.treefmt
       ];

@@ -1,10 +1,10 @@
+local@{ ... }:
 {
-  perSystem =
-    { config, lib, ... }:
+  perSystem = { config, ... }: with local.lib;
     {
       shellEnvs.default =
         with config.shellEnvs;
-        lib.mkMerge [
+        mkMerge [
           just
           nix
         ];
