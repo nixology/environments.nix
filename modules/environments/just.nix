@@ -1,11 +1,15 @@
 local@{ ... }:
 let
+  inherit (local.lib)
+    getExe
+    mkDefault
+    ;
+
   implementation =
     module@{ ... }:
     {
       perSystem =
         { pkgs, ... }:
-        with local.lib;
         let
           flakeRoot = builtins.path { path = module.self; };
 
