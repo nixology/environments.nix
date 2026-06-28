@@ -1,6 +1,12 @@
 local@{ ... }:
+let
+  inherit (local.lib)
+    mkMerge
+    ;
+in
 {
-  perSystem = { config, ... }: with local.lib;
+  perSystem =
+    { config, ... }:
     {
       shellEnvs.default =
         with config.shellEnvs;

@@ -1,7 +1,12 @@
 local@{ ... }:
 let
+  inherit (local.lib)
+    mkDefault
+    ;
+
   implementation = {
-    perSystem = { pkgs, ... }: with local.lib;
+    perSystem =
+      { pkgs, ... }:
       {
         shellEnvs.go.packages = [
           pkgs.go

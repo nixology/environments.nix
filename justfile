@@ -1,3 +1,9 @@
+# Auto-detect system architecture
+system := `nix eval --impure --raw --expr 'builtins.currentSystem'`
+
+show:
+    nix flake show | grep -v omitted
+
 bash-env:
     nix develop .#bash -c $SHELL
 
