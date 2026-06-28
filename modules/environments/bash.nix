@@ -1,7 +1,12 @@
 local@{ ... }:
 let
+  inherit (local.lib)
+    mkDefault
+    ;
+
   implementation = {
-    perSystem = { pkgs, ... }: with local.lib;
+    perSystem =
+      { pkgs, ... }:
       {
         shellEnvs.bash.packages = [
           pkgs.nodePackages.bash-language-server
