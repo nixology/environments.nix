@@ -10,9 +10,10 @@ let
       {
         shellEnvs.node.packages = [
           pkgs.corepack
-          pkgs.nodePackages.prettier
-          pkgs.nodePackages.typescript
-          pkgs.nodePackages.typescript-language-server
+          pkgs.husky
+          pkgs.prettier
+          pkgs.typescript
+          pkgs.typescript-language-server
           pkgs.nodejs
         ];
 
