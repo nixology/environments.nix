@@ -1,14 +1,18 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.erlang.packages = [
-          pkgs.erlang
-          pkgs.rebar3
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        erlang = {
+          packages = with pkgs; [
+            erlang
+            rebar3
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -20,8 +24,8 @@ in
     nixology.environments.erlang = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

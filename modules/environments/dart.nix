@@ -1,13 +1,17 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.dart.packages = [
-          pkgs.dart
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        dart = {
+          packages = with pkgs; [
+            dart
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -19,8 +23,8 @@ in
     nixology.environments.dart = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

@@ -1,14 +1,18 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.zig.packages = [
-          pkgs.zig
-          pkgs.zls
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        zig = {
+          packages = with pkgs; [
+            zig
+            zls
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -20,8 +24,8 @@ in
     nixology.environments.zig = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

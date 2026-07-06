@@ -1,26 +1,26 @@
-local@{ ... }:
+{ ... }@local:
 let
-  inherit (local.lib)
-    mkDefault
-    ;
+  inherit (local.inputs.flake.components) nixology;
+
+  inherit (local.lib) mkDefault;
 
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.swift = {
-          packages = [
-            pkgs.swift
-            pkgs.swiftpm
-            pkgs.swiftpm2nix
-            pkgs.sourcekit-lsp
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        swift = {
+          packages = with pkgs; [
+            swift
+            swiftpm
+            swiftpm2nix
+            sourcekit-lsp
           ];
 
           mkShellOverrides.stdenv = pkgs.stdenv;
         };
-
-        treefmt.programs.swift-format.enable = mkDefault true;
       };
+
+      treefmt.programs.swift-format.enable = mkDefault true;
+    };
   };
 in
 {
@@ -32,8 +32,8 @@ in
     nixology.environments.swift = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];
 

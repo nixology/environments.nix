@@ -1,24 +1,25 @@
-local@{ ... }:
+{ ... }@local:
 let
-  inherit (local.lib)
-    mkDefault
-    ;
+  inherit (local.inputs.flake.components) nixology;
+
+  inherit (local.lib) mkDefault;
 
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.node.packages = [
-          pkgs.corepack
-          pkgs.husky
-          pkgs.prettier
-          pkgs.typescript
-          pkgs.typescript-language-server
-          pkgs.nodejs
-        ];
-
-        treefmt.programs.prettier.enable = mkDefault true;
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        node = {
+          packages = with pkgs; [
+            corepack
+            nodejs
+            prettier
+            typescript
+            typescript-language-server
+          ];
+        };
       };
+
+      treefmt.programs.prettier.enable = mkDefault true;
+    };
   };
 in
 {
@@ -30,8 +31,8 @@ in
     nixology.environments.node = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];
 

@@ -1,15 +1,19 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.perl.packages = [
-          pkgs.perl
-          pkgs.perlPackages.PerlCritic
-          pkgs.perlPackages.PerlTidy
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        perl = {
+          packages = with pkgs; [
+            perl
+            perlPackages.PerlCritic
+            perlPackages.PerlTidy
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -21,8 +25,8 @@ in
     nixology.environments.perl = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

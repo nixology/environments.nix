@@ -1,15 +1,19 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.kotlin.packages = [
-          pkgs.gradle
-          pkgs.kotlin
-          pkgs.kotlin-language-server
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        kotlin = {
+          packages = with pkgs; [
+            gradle
+            kotlin
+            kotlin-language-server
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -21,8 +25,8 @@ in
     nixology.environments.kotlin = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

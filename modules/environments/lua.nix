@@ -1,19 +1,21 @@
-local@{ ... }:
+{ ... }@local:
 let
-  inherit (local.lib)
-    mkDefault
-    ;
+  inherit (local.inputs.flake.components) nixology;
+
+  inherit (local.lib) mkDefault;
 
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.lua.packages = [
-          pkgs.lua5_1
-        ];
-
-        treefmt.programs.stylua.enable = mkDefault true;
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        lua = {
+          packages = with pkgs; [
+            lua5_1
+          ];
+        };
       };
+
+      treefmt.programs.stylua.enable = mkDefault true;
+    };
   };
 in
 {
@@ -25,8 +27,8 @@ in
     nixology.environments.lua = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];
 

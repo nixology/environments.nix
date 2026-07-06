@@ -34,6 +34,9 @@ haskell-env:
 java-env:
     nix develop .#java -c $SHELL
 
+just-env:
+    nix develop .#just -c $SHELL
+
 kotlin-env:
     nix develop .#kotlin -c $SHELL
 

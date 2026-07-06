@@ -1,14 +1,18 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.elixir.packages = [
-          pkgs.elixir
-          pkgs.elixir-ls
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        elixir = {
+          packages = with pkgs; [
+            elixir
+            elixir-ls
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -20,8 +24,8 @@ in
     nixology.environments.elixir = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

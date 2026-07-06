@@ -1,15 +1,19 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.clojure.packages = [
-          pkgs.clj-kondo
-          pkgs.clojure
-          pkgs.leiningen
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        clojure = {
+          packages = with pkgs; [
+            clj-kondo
+            clojure
+            leiningen
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -21,8 +25,8 @@ in
     nixology.environments.clojure = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

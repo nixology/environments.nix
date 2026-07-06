@@ -1,21 +1,23 @@
-local@{ ... }:
+{ ... }@local:
 let
-  inherit (local.lib)
-    mkDefault
-    ;
+  inherit (local.inputs.flake.components) nixology;
+
+  inherit (local.lib) mkDefault;
 
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.java.packages = [
-          pkgs.gradle
-          pkgs.jdk
-          pkgs.maven
-        ];
-
-        treefmt.programs.google-java-format.enable = mkDefault true;
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        java = {
+          packages = with pkgs; [
+            gradle
+            jdk
+            maven
+          ];
+        };
       };
+
+      treefmt.programs.google-java-format.enable = mkDefault true;
+    };
   };
 in
 {
@@ -27,8 +29,8 @@ in
     nixology.environments.java = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];
 

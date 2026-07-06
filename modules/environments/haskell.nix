@@ -1,15 +1,19 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.haskell.packages = [
-          pkgs.cabal-install
-          pkgs.ghc
-          pkgs.haskell-language-server
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        haskell = {
+          packages = with pkgs; [
+            cabal-install
+            ghc
+            haskell-language-server
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -21,8 +25,8 @@ in
     nixology.environments.haskell = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

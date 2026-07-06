@@ -1,25 +1,27 @@
-local@{ ... }:
+{ ... }@local:
 let
-  inherit (local.lib)
-    mkDefault
-    ;
+  inherit (local.inputs.flake.components) nixology;
+
+  inherit (local.lib) mkDefault;
 
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.python.packages = [
-          pkgs.black
-          pkgs.pyright
-          pkgs.python3
-          pkgs.ruff
-        ];
-
-        treefmt.programs = {
-          black.enable = mkDefault true;
-          ruff-format.enable = mkDefault true;
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        python = {
+          packages = with pkgs; [
+            black
+            pyright
+            python3
+            ruff
+          ];
         };
       };
+
+      treefmt.programs = {
+        black.enable = mkDefault true;
+        ruff-format.enable = mkDefault true;
+      };
+    };
   };
 in
 {
@@ -31,8 +33,8 @@ in
     nixology.environments.python = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];
 

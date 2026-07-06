@@ -1,17 +1,21 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.ocaml.packages = [
-          pkgs.dune_3
-          pkgs.ocaml
-          pkgs.ocamlPackages.ocaml-lsp
-          pkgs.ocamlPackages.ocamlformat
-          pkgs.ocamlPackages.utop
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        ocaml = {
+          packages = with pkgs; [
+            dune_3
+            ocaml
+            ocamlPackages.ocaml-lsp
+            ocamlPackages.ocamlformat
+            ocamlPackages.utop
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -23,8 +27,8 @@ in
     nixology.environments.ocaml = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

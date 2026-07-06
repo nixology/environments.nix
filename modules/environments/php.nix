@@ -1,15 +1,19 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.php.packages = [
-          pkgs.php
-          pkgs.phpPackages.composer
-          pkgs.phpactor
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        php = {
+          packages = with pkgs; [
+            php
+            phpPackages.composer
+            phpactor
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -21,8 +25,8 @@ in
     nixology.environments.php = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

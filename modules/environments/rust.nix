@@ -1,24 +1,26 @@
-local@{ ... }:
+{ ... }@local:
 let
-  inherit (local.lib)
-    mkDefault
-    ;
+  inherit (local.inputs.flake.components) nixology;
+
+  inherit (local.lib) mkDefault;
 
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.rust.packages = [
-          pkgs.cargo
-          pkgs.cargo-audit
-          pkgs.clippy
-          pkgs.rust-analyzer
-          pkgs.rustc
-          pkgs.rustfmt
-        ];
-
-        treefmt.programs.rustfmt.enable = mkDefault true;
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        rust = {
+          packages = with pkgs; [
+            cargo
+            cargo-audit
+            clippy
+            rust-analyzer
+            rustc
+            rustfmt
+          ];
+        };
       };
+
+      treefmt.programs.rustfmt.enable = mkDefault true;
+    };
   };
 in
 {
@@ -30,8 +32,8 @@ in
     nixology.environments.rust = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];
 

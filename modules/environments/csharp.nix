@@ -1,13 +1,17 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.csharp.packages = [
-          pkgs.dotnet-sdk
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        csharp = {
+          packages = with pkgs; [
+            dotnet-sdk
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -19,8 +23,8 @@ in
     nixology.environments.csharp = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

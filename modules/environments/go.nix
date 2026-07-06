@@ -1,21 +1,23 @@
-local@{ ... }:
+{ ... }@local:
 let
-  inherit (local.lib)
-    mkDefault
-    ;
+  inherit (local.inputs.flake.components) nixology;
+
+  inherit (local.lib) mkDefault;
 
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.go.packages = [
-          pkgs.go
-          pkgs.gotools
-          pkgs.golangci-lint
-        ];
-
-        treefmt.programs.goimports.enable = mkDefault true;
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        go = {
+          packages = with pkgs; [
+            go
+            gotools
+            golangci-lint
+          ];
+        };
       };
+
+      treefmt.programs.goimports.enable = mkDefault true;
+    };
   };
 in
 {
@@ -27,8 +29,8 @@ in
     nixology.environments.go = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];
 

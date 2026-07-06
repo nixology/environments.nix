@@ -7,7 +7,7 @@ uses {
   components = [
     nixology.core.components
     nixology.environments.nix
-    nixology.extra.shellEnvs
+    nixology.extra.shellEnvironments
     nixology.tools.treefmt
   ];
 }

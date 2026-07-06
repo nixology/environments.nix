@@ -1,12 +1,14 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   inherit (local.lib)
     getExe
     mkDefault
     ;
 
   implementation =
-    module@{ ... }:
+    { ... }@module:
     {
       perSystem =
         { pkgs, ... }:
@@ -48,10 +50,14 @@ let
               '';
         in
         {
-          shellEnvs.just.packages = [
-            pkgs.just
-            justAliases
-          ];
+          shellEnvironments = {
+            just = {
+              packages = with pkgs; [
+                just
+                justAliases
+              ];
+            };
+          };
 
           treefmt.programs.just.enable = mkDefault true;
         };
@@ -66,8 +72,8 @@ in
     nixology.environments.just = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];
 

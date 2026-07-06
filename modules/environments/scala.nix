@@ -1,15 +1,19 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.scala.packages = [
-          pkgs.metals
-          pkgs.sbt
-          pkgs.scala
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        scala = {
+          packages = with pkgs; [
+            metals
+            sbt
+            scala
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -21,8 +25,8 @@ in
     nixology.environments.scala = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {

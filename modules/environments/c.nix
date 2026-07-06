@@ -1,18 +1,22 @@
-local@{ ... }:
+{ ... }@local:
 let
+  inherit (local.inputs.flake.components) nixology;
+
   implementation = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        shellEnvs.c.packages = [
-          pkgs.clang-tools
-          pkgs.cmake
-          pkgs.gcc
-          pkgs.gdb
-          pkgs.gnumake
-          pkgs.pkg-config
-        ];
+    perSystem = { pkgs, ... }: {
+      shellEnvironments = {
+        c = {
+          packages = with pkgs; [
+            clang-tools
+            cmake
+            gcc
+            gdb
+            gnumake
+            pkg-config
+          ];
+        };
       };
+    };
   };
 in
 {
@@ -24,8 +28,8 @@ in
     nixology.environments.c = {
       inherit implementation;
 
-      dependencies = with local.inputs.flake.components; [
-        nixology.extra.shellEnvs
+      dependencies = [
+        nixology.extra.shellEnvironments
       ];
 
       meta = {
