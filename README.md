@@ -2,7 +2,7 @@
 
 Reusable nix development environments for common languages and tools.
 
-This flake provides named `shellEnvs` and flake components that can be used
+This flake provides named `shellEnvironments` and flake components that can be used
 directly with `nix develop` or imported by other nixology flakes.
 
 ## Development Shells
