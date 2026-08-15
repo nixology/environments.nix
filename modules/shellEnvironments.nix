@@ -1,16 +1,10 @@
-{ ... }@local:
-let
-  inherit (local.lib) mkMerge;
-in
-{
-  perSystem =
-    { config, ... }:
-    {
-      shellEnvironments.default =
-        with config.shellEnvironments;
-        mkMerge [
-          just
-          nix
-        ];
-    };
+{ lib, ... }: {
+  perSystem = { config, ... }: {
+    shellEnvironments.default =
+      with config.shellEnvironments;
+      lib.mkMerge [
+        just
+        nix
+      ];
+  };
 }

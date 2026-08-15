@@ -1,10 +1,6 @@
-{ ... }@local:
+{ inputs, lib, ... }:
 let
-  inherit (local.inputs.flake.components) nixology;
-
-  inherit (local.lib) mkDefault;
-
-  implementation = {
+  module = {
     perSystem = { pkgs, ... }: {
       shellEnvironments = {
         ruby = {
@@ -15,20 +11,18 @@ let
         };
       };
 
-      treefmt.programs.rubocop.enable = mkDefault true;
+      treefmt.programs.rubocop.enable = lib.mkDefault true;
     };
   };
 in
 {
-  imports = [
-    implementation
-  ];
+  imports = [ module ];
 
   flake.components = {
     nixology.environments.ruby = {
-      inherit implementation;
+      inherit module;
 
-      dependencies = [
+      dependencies = with inputs.flake.components; [
         nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];

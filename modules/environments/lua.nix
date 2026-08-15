@@ -1,10 +1,6 @@
-{ ... }@local:
+{ inputs, lib, ... }:
 let
-  inherit (local.inputs.flake.components) nixology;
-
-  inherit (local.lib) mkDefault;
-
-  implementation = {
+  module = {
     perSystem = { pkgs, ... }: {
       shellEnvironments = {
         lua = {
@@ -14,20 +10,18 @@ let
         };
       };
 
-      treefmt.programs.stylua.enable = mkDefault true;
+      treefmt.programs.stylua.enable = lib.mkDefault true;
     };
   };
 in
 {
-  imports = [
-    implementation
-  ];
+  imports = [ module ];
 
   flake.components = {
     nixology.environments.lua = {
-      inherit implementation;
+      inherit module;
 
-      dependencies = [
+      dependencies = with inputs.flake.components; [
         nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];

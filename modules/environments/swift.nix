@@ -1,10 +1,6 @@
-{ ... }@local:
+{ inputs, lib, ... }:
 let
-  inherit (local.inputs.flake.components) nixology;
-
-  inherit (local.lib) mkDefault;
-
-  implementation = {
+  module = {
     perSystem = { pkgs, ... }: {
       shellEnvironments = {
         swift = {
@@ -19,20 +15,18 @@ let
         };
       };
 
-      treefmt.programs.swift-format.enable = mkDefault true;
+      treefmt.programs.swift-format.enable = lib.mkDefault true;
     };
   };
 in
 {
-  imports = [
-    implementation
-  ];
+  imports = [ module ];
 
   flake.components = {
     nixology.environments.swift = {
-      inherit implementation;
+      inherit module;
 
-      dependencies = [
+      dependencies = with inputs.flake.components; [
         nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];

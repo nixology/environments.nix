@@ -1,10 +1,6 @@
-{ ... }@local:
+{ inputs, lib, ... }:
 let
-  inherit (local.inputs.flake.components) nixology;
-
-  inherit (local.lib) mkDefault;
-
-  implementation = {
+  module = {
     perSystem = { pkgs, ... }: {
       shellEnvironments = {
         java = {
@@ -16,20 +12,18 @@ let
         };
       };
 
-      treefmt.programs.google-java-format.enable = mkDefault true;
+      treefmt.programs.google-java-format.enable = lib.mkDefault true;
     };
   };
 in
 {
-  imports = [
-    implementation
-  ];
+  imports = [ module ];
 
   flake.components = {
     nixology.environments.java = {
-      inherit implementation;
+      inherit module;
 
-      dependencies = [
+      dependencies = with inputs.flake.components; [
         nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];

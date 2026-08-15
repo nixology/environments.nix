@@ -1,10 +1,6 @@
-{ ... }@local:
+{ inputs, lib, ... }:
 let
-  inherit (local.inputs.flake.components) nixology;
-
-  inherit (local.lib) mkDefault;
-
-  implementation = {
+  module = {
     perSystem = { pkgs, ... }: {
       shellEnvironments = {
         rust = {
@@ -19,20 +15,18 @@ let
         };
       };
 
-      treefmt.programs.rustfmt.enable = mkDefault true;
+      treefmt.programs.rustfmt.enable = lib.mkDefault true;
     };
   };
 in
 {
-  imports = [
-    implementation
-  ];
+  imports = [ module ];
 
   flake.components = {
     nixology.environments.rust = {
-      inherit implementation;
+      inherit module;
 
-      dependencies = [
+      dependencies = with inputs.flake.components; [
         nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];

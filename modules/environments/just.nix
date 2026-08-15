@@ -1,22 +1,15 @@
-{ ... }@local:
+{ inputs, lib, ... }:
 let
-  inherit (local.inputs.flake.components) nixology;
-
-  inherit (local.lib)
-    getExe
-    mkDefault
-    ;
-
-  implementation =
-    { ... }@module:
+  module =
+    { self, ... }:
     {
       perSystem =
         { pkgs, ... }:
         let
-          flakeRoot = builtins.path { path = module.self; };
+          flakeRoot = builtins.path { path = self; };
 
           recipe = pkgs.writeShellScriptBin "recipe" ''
-            exec ${getExe pkgs.just} \
+            exec ${lib.getExe pkgs.just} \
               --working-directory . \
               --justfile ${flakeRoot}/justfile \
               "$(basename "$0")" "$@"
@@ -42,7 +35,7 @@ let
                     | awk -F: '{ print $1 }' \
                     | sort -u \
                     | while read -r name; do
-                      ln -s ${getExe recipe} "$out/bin/$name"
+                      ln -s ${lib.getExe recipe} "$out/bin/$name"
                     done
                 else
                   echo "No justfile found in $src"
@@ -59,20 +52,18 @@ let
             };
           };
 
-          treefmt.programs.just.enable = mkDefault true;
+          treefmt.programs.just.enable = lib.mkDefault true;
         };
     };
 in
 {
-  imports = [
-    implementation
-  ];
+  imports = [ module ];
 
   flake.components = {
     nixology.environments.just = {
-      inherit implementation;
+      inherit module;
 
-      dependencies = [
+      dependencies = with inputs.flake.components; [
         nixology.extra.shellEnvironments
         nixology.tools.treefmt
       ];

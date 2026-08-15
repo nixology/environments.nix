@@ -1,8 +1,6 @@
-{ ... }@local:
+{ inputs, ... }:
 let
-  inherit (local.inputs.flake.components) nixology;
-
-  implementation = {
+  module = {
     perSystem = { pkgs, ... }: {
       shellEnvironments = {
         kotlin = {
@@ -17,17 +15,13 @@ let
   };
 in
 {
-  imports = [
-    implementation
-  ];
+  imports = [ module ];
 
   flake.components = {
     nixology.environments.kotlin = {
-      inherit implementation;
+      inherit module;
 
-      dependencies = [
-        nixology.extra.shellEnvironments
-      ];
+      dependencies = with inputs.flake.components; [ nixology.extra.shellEnvironments ];
 
       meta = {
         description = "Provide Kotlin development tooling through a named shell environment.";
