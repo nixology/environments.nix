@@ -1,9 +1,5 @@
-{ inputs, ... }:
-let
-  inherit (inputs.flake.lib.components) implementationsOf;
-in
-{
-  imports = implementationsOf (
+{ inputs, lib, ... }: {
+  imports = lib.components.implementationsFrom (
     with inputs.flake.components;
     [
       nixology.core.components
