@@ -66,11 +66,11 @@
         "core": "core"
       },
       "locked": {
-        "lastModified": 1790615025,
-        "narHash": "sha256-8auXMt5taz8cR+MTvs5wfYqgo/DnPmvyWS71jZhPgJs=",
+        "lastModified": 1790787381,
+        "narHash": "sha256-Xf5P4W7249o2sWExevQIneXFJFwI2fWcpcnUFrwuN44=",
         "owner": "nixology",
         "repo": "flake.nix",
-        "rev": "db4ec54691a729992641c523196f16ccf1a4aca7",
+        "rev": "cf78e6b6030e32cd210ade4fd22ba7dc23a1107b",
         "type": "github"
       },
       "original": {
