@@ -38,7 +38,7 @@ jobs:
             sandbox = relaxed
 
       - name: Enable Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@76aaf8814cdb385b86597c32b8c51b66b69b0839 # main
+        uses: DeterminateSystems/magic-nix-cache-action@f69a2d3e148e90223fe63ab6e3f6331f2e7e33dc # main
         with:
           diagnostic-endpoint: ""
           use-flakehub: false
